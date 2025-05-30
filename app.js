@@ -67,6 +67,9 @@ app.post("/start", async (req, res) => {
   await startBot({ contacts, message, imagePath });
   res.redirect("/");
 });
+app.get('/api/status', (req, res) => {
+  res.json(getBotStatus());
+});
 app.post("/pause", (req, res) => {
   pauseBot();
   res.redirect("/");
