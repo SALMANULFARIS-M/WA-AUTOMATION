@@ -8,6 +8,7 @@ import { Boom } from "@hapi/boom";
 import fs from "fs";
 import qrcode from "qrcode-terminal";
 import randomizeMessage from "./utils/messageGen.js";
+import { pino } from "pino"; // add this import at the top
 
 let sock;
 let isPaused = false;
@@ -41,6 +42,7 @@ export async function startBot({ contacts, message, imagePath }) {
       browser: ["WhatsApp Bulk Sender", "Chrome", "121.0.0.0"],
       syncFullHistory: false,
       markOnlineOnConnect: false,
+      logger: pino({ level: "silent" })
     });
 
     // Handle connection events
@@ -200,4 +202,4 @@ function delay(ms) {
 
 function getRandomDelay(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+} 
