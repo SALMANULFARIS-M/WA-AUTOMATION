@@ -8,7 +8,7 @@ import { Boom } from "@hapi/boom";
 import fs from "fs";
 import qrcode from "qrcode-terminal";
 import randomizeMessage from "./utils/messageGen.js";
-import { pino } from "pino"; 
+import { pino } from "pino";
 
 let sock;
 let isPaused = false;
@@ -31,6 +31,12 @@ const status = {
 
 export const getBotStatus = () => status;
 
+// Optional file to store sent numbers
+const SENT_LOG_PATH = "./sent.json";
+const sentNumbers = new Set(
+  fs.existsSync(SENT_LOG_PATH) ? JSON.parse(fs.readFileSync(SENT_LOG_PATH)) : []
+);
+
 export async function startBot({ contacts, message, imagePath }) {
   try {
     const { state, saveCreds } = await useMultiFileAuthState("auth");
@@ -42,14 +48,11 @@ export async function startBot({ contacts, message, imagePath }) {
       browser: ["WhatsApp Bulk Sender", "Chrome", "121.0.0.0"],
       syncFullHistory: false,
       markOnlineOnConnect: false,
-      logger: pino({ level: "silent" })
+      logger: pino({ level: "silent" }),
     });
 
-    // Handle connection events
     sock.ev.on("connection.update", (update) => {
       const { connection, lastDisconnect, qr } = update;
-
-      // Update connection status
       status.connectionStatus = connection || status.connectionStatus;
 
       if (qr && !qrCodeGenerated) {
@@ -61,7 +64,7 @@ export async function startBot({ contacts, message, imagePath }) {
 
       if (connection === "close") {
         const shouldReconnect =
-          lastDisconnect.error instanceof Boom
+          lastDisconnect?.error instanceof Boom
             ? lastDisconnect.error.output?.statusCode !==
               DisconnectReason.loggedOut
             : true;
@@ -81,7 +84,7 @@ export async function startBot({ contacts, message, imagePath }) {
 
     sock.ev.on("creds.update", saveCreds);
 
-    // Reset status
+    // Reset bot status
     status.status = "Running";
     status.isRunning = true;
     status.shouldPause = false;
@@ -90,12 +93,12 @@ export async function startBot({ contacts, message, imagePath }) {
     status.progress.total = contacts.length;
     status.progress.sent = 0;
 
-    // Wait for connection to be open
+    // Wait until connected
     await new Promise((resolve) => {
-      const checkConnection = setInterval(() => {
+      const interval = setInterval(() => {
         if (status.connectionStatus === "connected") {
-          clearInterval(checkConnection);
-          resolve(true);
+          clearInterval(interval);
+          resolve();
         }
       }, 1000);
     });
@@ -105,16 +108,27 @@ export async function startBot({ contacts, message, imagePath }) {
       contacts.length,
       "contacts found."
     );
-    let messagesSinceLastBreak = 0;
-    let nextBreakAfter = getRandomDelay(93, 100); // Random first break point
 
-    // Process contacts
+    let messagesSinceLastBreak = 0;
+    let nextBreakAfter = getRandomDelay(93, 100);
+
     for (let i = 0; i < contacts.length; i++) {
       if (isStopped) break;
-      console.log(
-        `Processing contact ${i + 1}/${contacts.length}:`,
-        contacts[i]
-      );
+
+      const number = contacts[i].replace(/\D/g, "");
+      const jid = `${number}@s.whatsapp.net`;
+
+      if (sentNumbers.has(number)) {
+        console.log(`⚠️ Already sent to ${number}, skipping`);
+        continue;
+      }
+
+      // Check if number is valid WhatsApp account
+      const exists = await sock.onWhatsApp(jid);
+      if (!exists?.[0]?.exists) {
+        console.warn(`❌ ${number} is not a WhatsApp user, skipping`);
+        continue;
+      }
 
       while (isPaused) {
         status.shouldPause = true;
@@ -123,8 +137,6 @@ export async function startBot({ contacts, message, imagePath }) {
 
       status.shouldPause = false;
       status.isProcessing = true;
-
-      const number = contacts[i].replace(/\D/g, "");
       status.currentContact = {
         number,
         index: i,
@@ -133,7 +145,6 @@ export async function startBot({ contacts, message, imagePath }) {
 
       try {
         const finalMsg = randomizeMessage(message);
-        const jid = `${number}@s.whatsapp.net`;
 
         if (imagePath && fs.existsSync(imagePath)) {
           await sock.sendMessage(jid, {
@@ -146,21 +157,23 @@ export async function startBot({ contacts, message, imagePath }) {
         }
 
         status.progress.sent++;
+        sentNumbers.add(number);
+        fs.writeFileSync(SENT_LOG_PATH, JSON.stringify([...sentNumbers]));
         console.log("✅ Sent to:", number);
       } catch (err) {
-        console.error("❌ Error sending to", number, err);
+        console.error("❌ Error sending to", number, err?.message || err);
       }
 
       await delay(getRandomDelay(25000, 35000));
-      // ☕ Check for random long break
+
       messagesSinceLastBreak++;
       if (messagesSinceLastBreak >= nextBreakAfter) {
         console.log(
           `🛑 Taking a long break after ${messagesSinceLastBreak} messages...`
         );
-        await delay(getRandomDelay(10 * 60 * 1000, 15 * 60 * 1000)); // 10–20 minutes
+        await delay(getRandomDelay(10 * 60 * 1000, 15 * 60 * 1000));
         messagesSinceLastBreak = 0;
-        nextBreakAfter = getRandomDelay(93, 100); // Recalculate next break point
+        nextBreakAfter = getRandomDelay(93, 100);
       }
     }
 
@@ -202,4 +215,4 @@ function delay(ms) {
 
 function getRandomDelay(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-} 
+}
