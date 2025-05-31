@@ -8,7 +8,7 @@ import { Boom } from "@hapi/boom";
 import fs from "fs";
 import qrcode from "qrcode-terminal";
 import randomizeMessage from "./utils/messageGen.js";
-import { pino } from "pino"; // add this import at the top
+import { pino } from "pino"; 
 
 let sock;
 let isPaused = false;

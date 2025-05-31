@@ -20,7 +20,7 @@ function parseExcel(filePath) {
       return "+" + n;
     });
 
-  console.log("Parsed Numbers:", numbers);
+  console.log("Parsed Numbers:", numbers.length);
   return numbers;
 }
 
