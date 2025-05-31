@@ -259,7 +259,7 @@ If your investment needs to be right – iQue Cap should be your first choice!
                     <div class="bg-gray-50 rounded-lg p-2">
                       <div class="text-gray-500">Running</div>
                       <div
-                        class="font-semibold <%= status.isRunning ? 'text-green-600' : 'text-red-600' %>"
+                        class="running-status font-semibold <%= status.isRunning ? 'text-green-600' : 'text-red-600' %>"
                       >
                         <%= status.isRunning ? 'Yes' : 'No' %>
                       </div>
@@ -267,7 +267,7 @@ If your investment needs to be right – iQue Cap should be your first choice!
                     <div class="bg-gray-50 rounded-lg p-2">
                       <div class="text-gray-500">Paused</div>
                       <div
-                        class="font-semibold <%= status.shouldPause ? 'text-yellow-600' : 'text-green-600' %>"
+                        class="font-semibold paused-status <%= status.shouldPause ? 'text-yellow-600' : 'text-green-600' %>"
                       >
                         <%= status.shouldPause ? 'Yes' : 'No' %>
                       </div>
@@ -311,69 +311,120 @@ If your investment needs to be right – iQue Cap should be your first choice!
         </div>
       </div>
     </div>
-    <script>
-      // Function to update the UI with new status
-      function updateStatusUI(status) {
-        // Update status badge
-        document.querySelector(".status-badge").textContent = status.status;
-
-        // Update progress
-        const progressPercent =
-          status.progress.total > 0
-            ? Math.round((status.progress.sent / status.progress.total) * 100)
-            : 0;
-        document.querySelector(
-          ".progress-bar"
-        ).style.width = `${progressPercent}%`;
-        document.querySelector(
-          ".progress-count"
-        ).textContent = `${status.progress.sent}/${status.progress.total}`;
-
-        // Update running/paused indicators
-        document.querySelector(".running-status").textContent = status.isRunning
-          ? "Yes"
-          : "No";
-        document.querySelector(".paused-status").textContent =
-          status.shouldPause ? "Yes" : "No";
-
-        // Update current contact
-        const contactElement = document.querySelector(".current-contact");
-        if (status.currentContact) {
-          contactElement.innerHTML = `
-        <div class="font-medium text-blue-800">${
-          status.currentContact.number
-        }</div>
-        <div class="text-blue-600 text-xs">
-          Contact ${status.currentContact.index + 1} of ${
-            status.currentContact.totalContacts
-          }
-        </div>
-      `;
-        } else {
-          contactElement.innerHTML = `
-        <div class="bg-gray-50 rounded-lg p-2 text-sm italic text-gray-500">
-          No current contact
-        </div>
-      `;
-        }
+<script>
+  // Function to update the UI with new status
+  function updateStatusUI(status) {
+    // Update status badge
+    const statusBadge = document.querySelector(".status-badge");
+    if (statusBadge) {
+      statusBadge.textContent = status.status;
+      
+      // Set color based on status
+      if (status.status === "Running") {
+        statusBadge.className = "status-badge px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium";
+      } else if (status.status === "Paused") {
+        statusBadge.className = "status-badge px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium";
+      } else if (status.status === "Stopped") {
+        statusBadge.className = "status-badge px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium";
+      } else {
+        statusBadge.className = "status-badge px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium";
       }
+    }
 
-      // Function to fetch status from server
-      async function fetchStatus() {
-        try {
-          const response = await fetch("https://wa-automation-7njg.onrender.com/api/status");
-          const status = await response.json();
-          updateStatusUI(status);
-        } catch (error) {
-          console.error("Error fetching status:", error);
-        }
+    // Update progress bar and count
+    if (status.progress) {
+      const progressPercent = status.progress.total > 0
+        ? Math.round((status.progress.sent / status.progress.total) * 100)
+        : 0;
+      
+      const progressBar = document.querySelector(".progress-bar");
+      if (progressBar) {
+        progressBar.style.width = `${progressPercent}%`;
       }
+      
+      const progressCount = document.querySelector(".progress-count");
+      if (progressCount) {
+        progressCount.textContent = `${status.progress.sent}/${status.progress.total}`;
+      }
+    }
 
-      // Poll the server every 3 seconds
-      setInterval(fetchStatus, 3000);
+    // Update running/paused indicators
+    const runningStatus = document.querySelector(".running-status");
+    if (runningStatus) {
+      runningStatus.textContent = status.isRunning ? "Yes" : "No";
+      runningStatus.className = `font-semibold ${status.isRunning ? 'text-green-600' : 'text-red-600'}`;
+    }
 
-      // Initial load
-      fetchStatus();
-    </script>
+    const pausedStatus = document.querySelector(".paused-status");
+    if (pausedStatus) {
+      pausedStatus.textContent = status.shouldPause ? "Yes" : "No";
+      pausedStatus.className = `font-semibold ${status.shouldPause ? 'text-yellow-600' : 'text-green-600'}`;
+    }
+
+    // Update current contact
+    const contactElement = document.querySelector(".current-contact");
+    if (contactElement) {
+      if (status.currentContact) {
+        contactElement.innerHTML = `
+          <div class="bg-blue-50 rounded-lg p-2 text-sm">
+            <div class="font-medium text-blue-800">
+              ${status.currentContact.number}
+            </div>
+            <div class="text-blue-600 text-xs">
+              Contact ${status.currentContact.index + 1} of ${status.currentContact.totalContacts}
+            </div>
+          </div>
+        `;
+      } else {
+        contactElement.innerHTML = `
+          <div class="bg-gray-50 rounded-lg p-2 text-sm italic text-gray-500">
+            No current contact
+          </div>
+        `;
+      }
+    }
+  }
+
+  // Function to fetch status from server
+  async function fetchStatus() {
+    try {
+      const response = await fetch("/api/status");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const status = await response.json();
+      updateStatusUI(status);
+    } catch (error) {
+      console.error("Error fetching status:", error);
+      // Optionally show error to user
+      const statusBadge = document.querySelector(".status-badge");
+      if (statusBadge) {
+        statusBadge.textContent = "Connection Error";
+        statusBadge.className = "status-badge px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium";
+      }
+    }
+  }
+
+  // Poll the server every 3 seconds
+  let pollInterval = setInterval(fetchStatus, 3000);
+
+  // Initial load
+  document.addEventListener('DOMContentLoaded', function() {
+    fetchStatus();
+    
+    // Add event listeners for control buttons to immediately reflect changes
+    const controlButtons = document.querySelectorAll('form[action^="/"] button');
+    controlButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Small delay to allow the server to process before next poll
+        clearInterval(pollInterval);
+        setTimeout(() => {
+          fetchStatus();
+          pollInterval = setInterval(fetchStatus, 3000);
+        }, 1000);
+      });
+    });
+  });
+</script>
   </body>
 </html>
