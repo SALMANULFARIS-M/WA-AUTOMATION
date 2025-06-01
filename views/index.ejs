@@ -1,120 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WhatsApp Bulk Sender</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body
-    class="bg-gradient-to-br from-green-50 via-blue-50 to-indigo-100 min-h-screen font-sans"
-  >
-    <!-- Main Container -->
-    <div class="max-h-screen overflow-hidden md:overflow-visible">
-      <!-- Mobile: Scrollable, Desktop: Fit to screen -->
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Bulk Sender</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-green-50 via-blue-50 to-indigo-100 min-h-screen font-sans">
+  <!-- Main Container -->
+  <div class="max-h-screen overflow-hidden md:overflow-visible">
+    <!-- Mobile: Scrollable, Desktop: Fit to screen -->
     <div class="h-screen md:h-auto overflow-y-auto md:overflow-visible">
-        <div class="max-w-7xl mx-auto p-3 md:p-6">
-         <!-- Header -->
-           <div class="text-center mb-4 md:mb-6">
-            <div
-              class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-2xl mb-3 shadow-lg"
-            >
-              <span class="text-2xl">📤</span>
-            </div>
-            <h1
-              class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent"
-            >
-              WhatsApp Bulk Messaging Dashboard
-            </h1>
+      <div class="max-w-7xl mx-auto p-3 md:p-6">
+        <!-- Header -->
+        <div class="text-center mb-4 md:mb-6">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-2xl mb-3 shadow-lg">
+            <span class="text-2xl">📤</span>
           </div>
+          <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+            WhatsApp Bulk Messaging Dashboard
+          </h1>
+        </div>
 
-          <!-- Messages -->
-          <div class="mb-4">
-            <% if (messages.success) { %>
-            <div
-              class="bg-green-50 border-l-4 border-green-400 text-green-800 px-4 py-2 rounded-r-lg mb-2 shadow-sm"
-            >
-              <%= messages.success %>
-            </div>
-            <% } %> <% if (messages.error) { %>
-            <div
-              class="bg-red-50 border-l-4 border-red-400 text-red-800 px-4 py-2 rounded-r-lg mb-2 shadow-sm"
-            >
-              <%= messages.error %>
-            </div>
-            <% } %>
+        <!-- Messages -->
+        <div class="mb-4">
+          <% if (messages.success) { %>
+          <div class="bg-green-50 border-l-4 border-green-400 text-green-800 px-4 py-2 rounded-r-lg mb-2 shadow-sm">
+            <%= messages.success %>
           </div>
+          <% } %> <% if (messages.error) { %>
+          <div class="bg-red-50 border-l-4 border-red-400 text-red-800 px-4 py-2 rounded-r-lg mb-2 shadow-sm">
+            <%= messages.error %>
+          </div>
+          <% } %>
+        </div>
 
-          <!-- Main Grid Layout -->
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-            <!-- Left Column: Upload Form -->
-            <div class="lg:col-span-2">
-              <div
-                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4 md:p-6"
-              >
-                <h2
-                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-                >
-                  <span
-                    class="w-6 h-6 bg-blue-500 rounded-full mr-2 flex items-center justify-center text-white text-sm"
-                    >1</span
-                  >
-                  Setup Campaign
-                </h2>
+        <!-- Main Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+          <!-- Left Column: Upload Form -->
+          <div class="lg:col-span-2">
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4 md:p-6">
+              <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <span class="w-6 h-6 bg-blue-500 rounded-full mr-2 flex items-center justify-center text-white text-sm">1</span>
+                Setup Campaign
+              </h2>
 
-                <form
-                  action="/upload"
-                  method="POST"
-                  enctype="multipart/form-data"
-                  class="space-y-4"
-                >
-                  <!-- File Uploads Row -->
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label
-                        class="block text-sm font-medium text-gray-700 mb-2"
-                        >📊 Excel File</label
-                      >
-                      <div class="relative">
-                        <input
-                          type="file"
-                          name="excel"
-                          accept=".xlsx"
-                          required
-                          class="w-full border-2 border-dashed border-gray-300 rounded-xl p-3 text-sm hover:border-blue-400 focus:border-blue-500 focus:outline-none transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label
-                        class="block text-sm font-medium text-gray-700 mb-2"
-                        >🖼️ Image</label
-                      >
-                      <div class="relative">
-                        <input
-                          type="file"
-                          name="image"
-                          accept="image/*"
-                          required
-                          class="w-full border-2 border-dashed border-gray-300 rounded-xl p-3 text-sm hover:border-blue-400 focus:border-blue-500 focus:outline-none transition-colors"
-                        />
-                      </div>
+              <form action="/upload" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <!-- File Uploads Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">📊 Excel File</label>
+                    <div class="relative">
+                      <input type="file" name="excel" accept=".xlsx" required class="w-full border-2 border-dashed border-gray-300 rounded-xl p-3 text-sm hover:border-blue-400 focus:border-blue-500 focus:outline-none transition-colors" />
                     </div>
                   </div>
 
-                  <!-- Message Textarea -->
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2"
-                      >✉️ Message Template</label
-                    >
-                   <textarea
-  name="message"
-  rows="4"
-  required
-  class="w-full border-2 border-gray-200 rounded-xl p-3 text-sm focus:border-blue-500 focus:outline-none resize-none transition-colors"
-  placeholder="Enter your message template here..."
->
+                    <label class="block text-sm font-medium text-gray-700 mb-2">🖼️ Image</label>
+                    <div class="relative">
+                      <input type="file" name="image" accept="image/*" required class="w-full border-2 border-dashed border-gray-300 rounded-xl p-3 text-sm hover:border-blue-400 focus:border-blue-500 focus:outline-none transition-colors" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Message Textarea -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">✉️ Message Template</label>
+                  <textarea name="message" rows="4" required class="w-full border-2 border-gray-200 rounded-xl p-3 text-sm focus:border-blue-500 focus:outline-none resize-none transition-colors" placeholder="Enter your message template here...">
 നിക്ഷേപം നടത്തി നഷ്ടപ്പെട്ടു കഴിഞ്ഞോ?  
 Have you invested and faced losses before?  
 ഇനി അതിന് ഒരു full stop വെക്കാം!  
@@ -143,160 +97,124 @@ For more details, contact our Cap Advisor today Ph: 9071600134.
 If your investment needs to be right – iQue Cap should be your first choice!
 </textarea>
 
-                  </div>
+                </div>
 
-                  <button
-                    type="submit"
-                    class="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-green-600 hover:to-blue-600 transform hover:scale-[1.02] transition-all duration-200 shadow-lg"
-                  >
-                    🚀 Prepare Campaign
+                <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-green-600 hover:to-blue-600 transform hover:scale-[1.02] transition-all duration-200 shadow-lg">
+                  🚀 Prepare Campaign
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Right Column: Controls & Status -->
+          <div class="space-y-4">
+            <!-- Control Panel -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4 md:p-6">
+              <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <span class="w-6 h-6 bg-green-500 rounded-full mr-2 flex items-center justify-center text-white text-sm">2</span>
+                Controls
+              </h2>
+
+              <div class="grid grid-cols-2 gap-2">
+                <form action="/start" method="POST">
+                  <button class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm">
+                    ▶️ Start
+                  </button>
+                </form>
+
+                <form action="/pause" method="POST">
+                  <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm">
+                    ⏸️ Pause
+                  </button>
+                </form>
+
+                <form action="/resume" method="POST">
+                  <button class="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm">
+                    ⏯️ Resume
+                  </button>
+                </form>
+
+                <form action="/stop" method="POST">
+                  <button class="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm">
+                    ⛔ Stop
                   </button>
                 </form>
               </div>
             </div>
 
-            <!-- Right Column: Controls & Status -->
-            <div class="space-y-4">
-              <!-- Control Panel -->
-              <div
-                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4 md:p-6"
-              >
-                <h2
-                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-                >
-                  <span
-                    class="w-6 h-6 bg-green-500 rounded-full mr-2 flex items-center justify-center text-white text-sm"
-                    >2</span
-                  >
-                  Controls
-                </h2>
+            <!-- Status Panel -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4 md:p-6">
+              <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <span class="w-6 h-6 bg-purple-500 rounded-full mr-2 flex items-center justify-center text-white text-sm">📊</span>
+                Status
+              </h2>
 
-                <div class="grid grid-cols-2 gap-2">
-                  <form action="/start" method="POST">
-                    <button
-                      class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm"
-                    >
-                      ▶️ Start
-                    </button>
-                  </form>
-
-                  <form action="/pause" method="POST">
-                    <button
-                      class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm"
-                    >
-                      ⏸️ Pause
-                    </button>
-                  </form>
-
-                  <form action="/resume" method="POST">
-                    <button
-                      class="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm"
-                    >
-                      ⏯️ Resume
-                    </button>
-                  </form>
-
-                  <form action="/stop" method="POST">
-                    <button
-                      class="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm"
-                    >
-                      ⛔ Stop
-                    </button>
-                  </form>
+              <!-- Status Indicators -->
+              <div class="space-y-3">
+                <!-- Status Badge -->
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-600">Status:</span>
+                  <span class="status-badge px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                    <%= status.status %>
+                  </span>
                 </div>
-              </div>
 
-              <!-- Status Panel -->
-              <div
-                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4 md:p-6"
-              >
-                <h2
-                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-                >
-                  <span
-                    class="w-6 h-6 bg-purple-500 rounded-full mr-2 flex items-center justify-center text-white text-sm"
-                    >📊</span
-                  >
-                  Status
-                </h2>
-
-                <!-- Status Indicators -->
-                <div class="space-y-3">
-                  <!-- Status Badge -->
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600">Status:</span>
-                    <span
-                      class="status-badge px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium"
-                    >
-                      <%= status.status %>
-                    </span>
+                <!-- Progress Bar -->
+                <div>
+                  <div class="flex justify-between text-sm text-gray-600 mb-1">
+                    <span>Progress</span>
+                    <span class="progress-count">
+                      ><%= status.progress.sent %> / <%= status.progress.total
+                        %></span>
                   </div>
-
-                  <!-- Progress Bar -->
-                  <div>
-                    <div
-                      class="flex justify-between text-sm text-gray-600 mb-1"
-                    >
-                      <span>Progress</span>
-                      <span
-                      class="progress-count">
-                        ><%= status.progress.sent %> / <%= status.progress.total
-                        %></span
-                      >
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                      <% let progressPercent = 0; if (status.progress &&
+                  <div class="w-full bg-gray-200 rounded-full h-2">
+                    <% let progressPercent = 0; if (status.progress &&
                       status.progress.total) { progressPercent =
                       Math.round((status.progress.sent / status.progress.total)
                       * 100); } %>
-                     <!-- Progress Bar -->
-                     <div class="progress-bar bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full transition-all duration-300" 
-                      style="width: <%= progressPercent %>%"></div>
+                    <!-- Progress Bar -->
+                    <div class="progress-bar bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full transition-all duration-300" style="width: <%= progressPercent %>%"></div>
+                  </div>
+                </div>
+
+                <!-- Status Details -->
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div class="bg-gray-50 rounded-lg p-2">
+                    <div class="text-gray-500">Running</div>
+                    <div class="running-status font-semibold <%= status.isRunning ? 'text-green-600' : 'text-red-600' %>">
+                      <%= status.isRunning ? 'Yes' : 'No' %>
                     </div>
                   </div>
-
-                  <!-- Status Details -->
-                  <div class="grid grid-cols-2 gap-2 text-xs">
-                    <div class="bg-gray-50 rounded-lg p-2">
-                      <div class="text-gray-500">Running</div>
-                      <div
-                        class="running-status font-semibold <%= status.isRunning ? 'text-green-600' : 'text-red-600' %>"
-                      >
-                        <%= status.isRunning ? 'Yes' : 'No' %>
-                      </div>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-2">
-                      <div class="text-gray-500">Paused</div>
-                      <div
-                        class="font-semibold paused-status <%= status.shouldPause ? 'text-yellow-600' : 'text-green-600' %>"
-                      >
-                        <%= status.shouldPause ? 'Yes' : 'No' %>
-                      </div>
+                  <div class="bg-gray-50 rounded-lg p-2">
+                    <div class="text-gray-500">Paused</div>
+                    <div class="font-semibold paused-status <%= status.shouldPause ? 'text-yellow-600' : 'text-green-600' %>">
+                      <%= status.shouldPause ? 'Yes' : 'No' %>
                     </div>
                   </div>
+                </div>
 
+                <!-- Current Contact -->
+                <div class="border-t pt-3 mt-3">
+                  <div class="text-xs text-gray-500 mb-1">
+                    Current Contact
+                  </div>
                   <!-- Current Contact -->
-                  <div class="border-t pt-3 mt-3">
-                    <div class="text-xs text-gray-500 mb-1">
-                      Current Contact
+                  <div class="current-contact">
+                    <% if (status.currentContact) { %>
+                    <div class="bg-blue-50 rounded-lg p-2 text-sm">
+                      <div class="font-medium text-blue-800">
+                        <%= status.currentContact.number %>
+                      </div>
+                      <div class="text-blue-600 text-xs">
+                        Contact <%= status.currentContact.index + 1 %> of <%= status.currentContact.totalContacts %>
+                      </div>
                     </div>
-                   <!-- Current Contact -->
-                    <div class="current-contact">
-                        <% if (status.currentContact) { %>
-                       <div class="bg-blue-50 rounded-lg p-2 text-sm">
-                        <div class="font-medium text-blue-800">
-                               <%= status.currentContact.number %>
-                          </div>
-                           <div class="text-blue-600 text-xs">
-                           Contact <%= status.currentContact.index + 1 %> of <%= status.currentContact.totalContacts %>
-                              </div>
-                                   </div>
-                             <% } else { %>
-                              <div class="bg-gray-50 rounded-lg p-2 text-sm italic text-gray-500">
-                                 No current contact
-                                 </div>
-                                   <% } %>
-                         </div>
+                    <% } else { %>
+                    <div class="bg-gray-50 rounded-lg p-2 text-sm italic text-gray-500">
+                      No current contact
+                    </div>
+                    <% } %>
+                  </div>
                 </div>
               </div>
             </div>
@@ -312,61 +230,61 @@ If your investment needs to be right – iQue Cap should be your first choice!
         </div>
       </div>
     </div>
-<script>
-  // Function to update the UI with new status
-  function updateStatusUI(status) {
-    // Update status badge
-    const statusBadge = document.querySelector(".status-badge");
-    if (statusBadge) {
-      statusBadge.textContent = status.status;
-      
-      // Set color based on status
-      if (status.status === "Running") {
-        statusBadge.className = "status-badge px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium";
-      } else if (status.status === "Paused") {
-        statusBadge.className = "status-badge px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium";
-      } else if (status.status === "Stopped") {
-        statusBadge.className = "status-badge px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium";
-      } else {
-        statusBadge.className = "status-badge px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium";
-      }
-    }
+    <script>
+      // Function to update the UI with new status
+      function updateStatusUI(status) {
+        // Update status badge
+        const statusBadge = document.querySelector(".status-badge");
+        if (statusBadge) {
+          statusBadge.textContent = status.status;
 
-    // Update progress bar and count
-    if (status.progress) {
-      const progressPercent = status.progress.total > 0
-        ? Math.round((status.progress.sent / status.progress.total) * 100)
-        : 0;
-      
-      const progressBar = document.querySelector(".progress-bar");
-      if (progressBar) {
-        progressBar.style.width = `${progressPercent}%`;
-      }
-      
-      const progressCount = document.querySelector(".progress-count");
-      if (progressCount) {
-        progressCount.textContent = `${status.progress.sent}/${status.progress.total}`;
-      }
-    }
+          // Set color based on status
+          if (status.status === "Running") {
+            statusBadge.className = "status-badge px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium";
+          } else if (status.status === "Paused") {
+            statusBadge.className = "status-badge px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium";
+          } else if (status.status === "Stopped") {
+            statusBadge.className = "status-badge px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium";
+          } else {
+            statusBadge.className = "status-badge px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium";
+          }
+        }
 
-    // Update running/paused indicators
-    const runningStatus = document.querySelector(".running-status");
-    if (runningStatus) {
-      runningStatus.textContent = status.isRunning ? "Yes" : "No";
-      runningStatus.className = `font-semibold ${status.isRunning ? 'text-green-600' : 'text-red-600'}`;
-    }
+        // Update progress bar and count
+        if (status.progress) {
+          const progressPercent = status.progress.total > 0 ?
+            Math.round((status.progress.sent / status.progress.total) * 100) :
+            0;
 
-    const pausedStatus = document.querySelector(".paused-status");
-    if (pausedStatus) {
-      pausedStatus.textContent = status.shouldPause ? "Yes" : "No";
-      pausedStatus.className = `font-semibold ${status.shouldPause ? 'text-yellow-600' : 'text-green-600'}`;
-    }
+          const progressBar = document.querySelector(".progress-bar");
+          if (progressBar) {
+            progressBar.style.width = `${progressPercent}%`;
+          }
 
-    // Update current contact
-    const contactElement = document.querySelector(".current-contact");
-    if (contactElement) {
-      if (status.currentContact) {
-        contactElement.innerHTML = `
+          const progressCount = document.querySelector(".progress-count");
+          if (progressCount) {
+            progressCount.textContent = `${status.progress.sent}/${status.progress.total}`;
+          }
+        }
+
+        // Update running/paused indicators
+        const runningStatus = document.querySelector(".running-status");
+        if (runningStatus) {
+          runningStatus.textContent = status.isRunning ? "Yes" : "No";
+          runningStatus.className = `font-semibold ${status.isRunning ? 'text-green-600' : 'text-red-600'}`;
+        }
+
+        const pausedStatus = document.querySelector(".paused-status");
+        if (pausedStatus) {
+          pausedStatus.textContent = status.shouldPause ? "Yes" : "No";
+          pausedStatus.className = `font-semibold ${status.shouldPause ? 'text-yellow-600' : 'text-green-600'}`;
+        }
+
+        // Update current contact
+        const contactElement = document.querySelector(".current-contact");
+        if (contactElement) {
+          if (status.currentContact) {
+            contactElement.innerHTML = `
           <div class="bg-blue-50 rounded-lg p-2 text-sm">
             <div class="font-medium text-blue-800">
               ${status.currentContact.number}
@@ -376,56 +294,57 @@ If your investment needs to be right – iQue Cap should be your first choice!
             </div>
           </div>
         `;
-      } else {
-        contactElement.innerHTML = `
+          } else {
+            contactElement.innerHTML = `
           <div class="bg-gray-50 rounded-lg p-2 text-sm italic text-gray-500">
             No current contact
           </div>
         `;
+          }
+        }
       }
-    }
-  }
 
-  // Function to fetch status from server
-  async function fetchStatus() {
-    try {
-      const response = await fetch("/api/status");
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Function to fetch status from server
+      async function fetchStatus() {
+        try {
+          const response = await fetch("/api/status");
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const status = await response.json();
+          updateStatusUI(status);
+        } catch (error) {
+          console.error("Error fetching status:", error);
+          // Optionally show error to user
+          const statusBadge = document.querySelector(".status-badge");
+          if (statusBadge) {
+            statusBadge.textContent = "Connection Error";
+            statusBadge.className = "status-badge px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium";
+          }
+        }
       }
-      const status = await response.json();
-      updateStatusUI(status);
-    } catch (error) {
-      console.error("Error fetching status:", error);
-      // Optionally show error to user
-      const statusBadge = document.querySelector(".status-badge");
-      if (statusBadge) {
-        statusBadge.textContent = "Connection Error";
-        statusBadge.className = "status-badge px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium";
-      }
-    }
-  }
 
-  // Poll the server every 3 seconds
-  let pollInterval = setInterval(fetchStatus, 3000);
+      // Poll the server every 3 seconds
+      let pollInterval = setInterval(fetchStatus, 3000);
 
-  // Initial load
-  document.addEventListener('DOMContentLoaded', function() {
-    fetchStatus();
-    
-    // Add event listeners for control buttons to immediately reflect changes
-    const controlButtons = document.querySelectorAll('form[action^="/"] button');
-    controlButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        // Small delay to allow the server to process before next poll
-        clearInterval(pollInterval);
-        setTimeout(() => {
-          fetchStatus();
-          pollInterval = setInterval(fetchStatus, 3000);
-        }, 1000);
+      // Initial load
+      document.addEventListener('DOMContentLoaded', function() {
+        fetchStatus();
+
+        // Add event listeners for control buttons to immediately reflect changes
+        const controlButtons = document.querySelectorAll('form[action^="/"] button');
+        controlButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            // Small delay to allow the server to process before next poll
+            clearInterval(pollInterval);
+            setTimeout(() => {
+              fetchStatus();
+              pollInterval = setInterval(fetchStatus, 3000);
+            }, 1000);
+          });
+        });
       });
-    });
-  });
-</script>
-  </body>
+    </script>
+</body>
+
 </html>
